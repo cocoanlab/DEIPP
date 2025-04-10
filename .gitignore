@@ -1,0 +1,8 @@
+# IGNORE
+
+experiment/Data/
+experiment/Recording/
+
+*.DS_Store
+*.m~
+*.asv
