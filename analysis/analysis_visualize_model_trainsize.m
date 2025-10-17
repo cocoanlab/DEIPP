@@ -1,9 +1,10 @@
-function analysis_visualize_model_trainsize(sj_num, opt, varargin)
+function analysis_visualize_model_trainsize(sj_num, varargin)
 
 preptype = 'cocoan-preproc';
 antype = 'cocoan-analysis';
 bidsdir = fileparts(fileparts(mfilename('fullpath'))); % mfilename: bidsdir/code/~.m
 if isempty(bidsdir); bidsdir = fileparts(pwd); end
+parctype = 'indparc';
 
 for i = 1:length(varargin)
     if ischar(varargin{i})
@@ -14,6 +15,8 @@ for i = 1:length(varargin)
                 antype = varargin{i+1};
             case {'bidsdir'}
                 bidsdir = varargin{i+1};
+            case {'parctype'}
+                parctype = varargin{i+1};
         end
     end
 end
@@ -26,42 +29,22 @@ tbl = tdfread(fullfile(bidsdir, 'participants.tsv'));
 sj_id = tbl.participant_id(sj_num,:);
 
 andir = fullfile(bidsdir, 'derivatives', antype);
-preddir = fullfile(andir, 'predict_rating_func', sj_id);
+ratdir = fullfile(andir, 'rating', sj_id);
+preddir = fullfile(andir, 'predict_rating', sj_id);
+
+cols = call_colors;
 
 %% Load data
 
-mdlname = fullfile(preddir, sprintf('%s_predict_rating_modeling_%s_%s_%s%d_tr%d_hout%s_alg%s.mat', ...
-    sj_id, opt.dfc, opt.parc, opt.bintype, opt.nbin, opt.ntrain, opt.hout, opt.algorithm));
-if ~exist(mdlname, 'file'); return; end
-load(mdlname, 'out');
+ratname = fullfile(ratdir, sprintf('%s_rating.mat', sj_id));
+if ~exist(ratname, 'file'); return; end
+load(ratname, 'rating_dat', 'rating_dat_tbin', 'nbin');
 
-obsname = fullfile(preddir, sprintf('%s_predict_rating_observation.mat', sj_id));
-if ~exist(obsname, 'file'); return; end
-load(obsname, 'rating_dat', 'rating_dat_tbin', 'nbin');
-
-testname = fullfile(preddir, sprintf('%s_predict_rating_test_%s_%s_%s%d_tr%d_hout%s_alg%s.mat', ...
-    sj_id, opt.dfc, opt.parc, opt.bintype, opt.nbin, opt.ntrain, opt.hout, opt.algorithm));
-if ~exist(testname, 'file'); return; end
-load(testname, 'Yfit', 'Yfit_tbin');
-
-trszname = fullfile(preddir, sprintf('%s_predict_rating_trainsize_%s_%s_%s%d_tr%d_hout%s_alg%s.mat', ...
-    sj_id, opt.dfc, opt.parc, opt.bintype, opt.nbin, opt.ntrain, opt.hout, opt.algorithm));
+trszname = fullfile(preddir, sprintf('%s_predict_rating_trainsize_%s.mat', sj_id, parctype));
 if ~exist(trszname, 'file'); return; end
 load(trszname, 'trsz_nsub', 'trsz_nrep', 'trsz_Yfit', 'trsz_Yfit_tbin');
 
-figbasename = strrep(strrep(trszname, '_predict_rating_trainsize_', '_predict_rating_figure_'), '.mat', '');
-
-rcols = call_colors;
-ucols = rcols.fourunits;
-
-%% Hold-out
-
-if ~isempty(out.idx_hout)
-    trsz_Yfit = trsz_Yfit(:,out.idx_hout,:,:);
-    rating_dat = rating_dat(:,out.idx_hout);
-    trsz_Yfit_tbin = trsz_Yfit_tbin(:,out.idx_hout,:);
-    rating_dat_tbin = rating_dat_tbin(:,out.idx_hout,:);
-end
+figbasename = fullfile(preddir, sprintf('%s_predict_rating_trainsize_%s', sj_id, parctype));
 
 %% Time-averaged data
 
@@ -108,7 +91,7 @@ for i = 1:numel(x)
     end
 end
 
-%%
+%% Correlation all, training size dependency
 
 [rall_r, rall_bootp] = deal(NaN(trsz_nrep*numel(trsz_nsub), numel(x)));
 rall_bootci = NaN(trsz_nrep*numel(trsz_nsub), 2, numel(x));
@@ -140,35 +123,11 @@ for i = 1:numel(x)
     fprintf('Regression with session, b = %.2f, t = %.2f, P-value %.4f\n', rall_tstats(:,i));
 end
 
-%%
-
-hold on;
-bars = bar(rall_bootsig .* 100, 'EdgeColor', 'flat', 'FaceColor', 'flat');
-for i = 1:numel(bars)
-    bars(i).CData = repmat(ucols(i,:), size(bars(i).CData,1), 1);
-end
-set(gca, 'LineWidth', 2, 'XLim', [trsz_nsub(1)-0.5 trsz_nsub(end)+0.5], 'YLim', [0 100], 'YTick', 0:10:100, ...
-    'XTick', trsz_nsub, 'TickLength', [0.015 0.015], 'Tickdir', 'out', 'Box', 'off', 'FontSize', 16);
-h = gca; h.XAxis.TickLength = [0 0];
-set(gcf, 'color', 'w');
-switch sj_num
-    case 1
-        resize_axes(gca, [616 350]);
-    case 2
-        resize_axes(gca, [760 350]);
-end
-
-figname = sprintf('%s_trainsize_corrsig.pdf', figbasename);
-pagesetup(gcf); saveas(gcf, figname); saveas(gcf, strrep(figname, '.pdf', '.png'));
-close all;
-
-%%
-
 hold on;
 for i = size(rall_r,3):-1:1
-    scatter(trsz_nsub, mean(rall_r(:,:,i)), 50, ucols(i,:), 'filled');
+    scatter(trsz_nsub, mean(rall_r(:,:,i)), 50, cols.fourunits(i,:), 'filled');
     errorbar(trsz_nsub, mean(rall_r(:,:,i)), std(rall_r(:,:,i))./trsz_nrep.^0.5.*norminv(0.975), ...
-        '-', 'CapSize', 0, 'LineWidth', 2, 'Color', ucols(i,:));
+        '-', 'CapSize', 0, 'LineWidth', 2, 'Color', cols.fourunits(i,:));
 end
 set(gca, 'LineWidth', 2, 'XLim', [trsz_nsub(1)-0.5 trsz_nsub(end)+0.5], 'YLim', extlim(mean(rall_r), 0.1), ...
     'XTick', trsz_nsub, 'TickLength', [0.015 0.015], 'Tickdir', 'out', 'Box', 'off', 'FontSize', 16);
@@ -181,8 +140,10 @@ switch sj_num
         resize_axes(gca, [760 350]);
 end
 
-figname = sprintf('%s_trainsize_corr.pdf', figbasename);
-pagesetup(gcf); saveas(gcf, figname); saveas(gcf, strrep(figname, '.pdf', '.png'));
+figname = sprintf('%s_corr.pdf', figbasename);
+pagesetup(gcf); saveas(gcf, figname);
 close all;
+
+fprintf('Done.\n');
 
 end

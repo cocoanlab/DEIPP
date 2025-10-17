@@ -1,9 +1,39 @@
 function refcols = call_colors
 
-fx_interp = @(a,b) interp1(linspace(0,1,size(a,1)), a, linspace(0,1,b));
+refcols.fx_interp = @(a,b) interp1(linspace(0,1,size(a,1)), a, linspace(0,1,b));
 
-refcols.power = [0.5   0.5   0.5
+refcols.fourunits = [100,197,235
+    254,179,38
+    232,77,138
+    127,88,175] ./ 255;
+
+refcols.bipolar = [8    29    88
+    37    52   148
+    34    94   168
+    29   145   192
+    65   182   196
+   127   205   187
+   199   233   180
+   237   248   177
+   255   237   160
+   254   217   118
+   254   178    76
+   253   141    60
+   252    78    42
+   227    26    28
+   189     0    38
+   128     0    38] ./ 255;
+
+refcols.posneg = [215    25    28
+    43   131   186] ./ 255;
+
+refcols.wb_ry = [255 0 0; 255 255 0] ./ 255;
+
+refcols.wb_blb = [0 0 255; 0 255 255] ./ 255;
+
+refcols.wb_power = [0.5   0.5   0.5
     1     0     0
+    0.5   0     0.3
     0     0     0.6
     1     1     0
     1     0.7   0.4
@@ -26,66 +56,13 @@ refcols.power = [0.5   0.5   0.5
     0.75  0.75  0.3
     0.75  0.3   0.75];
 
-refcols.bipolar = [8    29    88
-    37    52   148
-    34    94   168
-    29   145   192
-    65   182   196
-    127   205   187
-    199   233   180
-    237   248   177
-    255   251   236
-    255   255   255
-    255   246   204
-    255   237   160
-    254   217   118
-    254   178    76
-    253   141    60
-    252    78    42
-    227    26    28
-    189     0    38
-    128     0    38] ./ 255;
-refcols.bipolar = fx_interp(refcols.bipolar, 1000);
-
-refcols.bipolar2 = [8    29    88
-    37    52   148
-    34    94   168
-    29   145   192
-    65   182   196
-   127   205   187
-   199   233   180
-   237   248   177
-   255   237   160
-   254   217   118
-   254   178    76
-   253   141    60
-   252    78    42
-   227    26    28
-   189     0    38
-   128     0    38] ./ 255;
-refcols.bipolar2 = fx_interp(refcols.bipolar2, 1000);
-
-refcols.corr_pos = [255   237   160
-    254   217   118
-    254   178    76
-    253   141    60
-    252    78    42
-    227    26    28
-    189     0    38
-    128     0    38] ./ 255;
-refcols.corr_pos = fx_interp(refcols.corr_pos, 1000);
-refcols.corr_neg = [237   248   177
-   199   233   180
-   127   205   187
-    65   182   196
-    29   145   192
-    34    94   168
-    37    52   148
-     8    29    88] ./ 255;
-refcols.corr_neg = fx_interp(refcols.corr_neg, 1000);
-
-refcols.posneg = [215    25    28
-    43   131   186] ./ 255;
+refcols.wb_rwb = [0,0,255;
+    127,127,255;
+    255,255,255;
+    255,127,127;
+    255,0,0] ./ 255;
+refcols.wb_rwb_wb = refcols.wb_rwb(1:3,:);
+refcols.wb_rwb_rw = refcols.wb_rwb(3:end,:);
 
 refcols.wb_cw = [59,76,192;
     68,90,204;
@@ -123,14 +100,13 @@ refcols.wb_cw = [59,76,192;
 refcols.wb_cw_c = refcols.wb_cw(1:17,:);
 refcols.wb_cw_w = refcols.wb_cw(17:end,:);
 
-refcols.wb_ry = [255 0 0; 255 255 0] ./ 255;
-refcols.wb_ry = fx_interp(refcols.wb_ry, 1000);
-refcols.wb_blb = [0 255 255; 0 0 255] ./ 255;
-refcols.wb_blb = fx_interp(refcols.wb_blb, 1000);
-
-refcols.fourunits = [100,197,235
-    254,179,38
-    232,77,138
-    127,88,175] ./ 255;
+refcols.wb_rybcbl = [255,255,0;
+    255,0,0;
+    0,0,0;
+    0,0,255;
+    0,255,255] ./ 255;
+refcols.wb_rybcbl = flipud(refcols.wb_rybcbl);
+refcols.wb_rybcbl_blbc = refcols.wb_rybcbl(1:3,:);
+refcols.wb_rybcbl_rybl = refcols.wb_rybcbl(3:end,:);
 
 end
