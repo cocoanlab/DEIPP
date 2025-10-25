@@ -33,6 +33,10 @@ This repository is for sharing the codes that are used in the following paper.
   ➤ [https://github.com/MidnightScanClub/MSCcodebase](https://github.com/MidnightScanClub/MSCcodebase)
 * **cocoanCORE**
   ➤ [https://github.com/cocoanlab/cocoanCORE](https://github.com/cocoanlab/cocoanCORE)
+* **Schaefer 500-region parcellation**
+  ➤ [https://github.com/ThomasYeoLab/CBIG/tree/master/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal](https://github.com/ThomasYeoLab/CBIG/tree/master/stable_projects/brain_parcellation/Schaefer2018_LocalGlobal)
+* **Infomap 0.15.7**
+  ➤ [https://github.com/mapequation/infomap](https://github.com/mapequation/infomap)
 
 ---
 
@@ -44,19 +48,16 @@ Clone this repository:
 git clone https://github.com/cocoanlab/DEIPP.git
 ```
 
-Ensure all required dependencies are installed and properly configured in your environment.
-
 ---
 
 ## How to Run
 
 | Stage         | Script                                                        | Notes                                       |
 | ------------- | ------------------------------------------------------------- | ------------------------------------------- |
-| Experiment    | `DEIPP.m`                                                     | Psychtoolbox-based behavioral and fMRI task |
+| Experiment    | `DEIPP.m`                                                     | Psychtoolbox-based fMRI task                |
 | Preprocessing | `preprocessing_cocoan_anat.m` & `preprocessing_cocoan_func.m` | Anatomical and functional preprocessing     |
-| Analysis      | `analysis_generate_command.m`                                 | Model training and decoding analysis        |
+| Analysis      | `analysis_generate_command.m`                                 | Main analysis                               |
 
-Please refer to comments within each script for parameter tuning and subject-specific settings.
 
 ---
 
