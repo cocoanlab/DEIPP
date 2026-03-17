@@ -2,7 +2,7 @@
 
 This repository is for sharing the codes that are used in the following paper.
 
-> Jae-Joong Lee, Seongwoo Jo, Sungkun Cho, Choong-Wan Woo\*, Personalized Brain Decoding of Spontaneous Pain in Individuals With Chronic Pain, _in revision_
+> Jae-Joong Lee, Seongwoo Jo, Sungkun Cho, Choong-Wan Woo\*, Personalized Brain Decoding of Spontaneous Pain in Individuals With Chronic Pain, 2026, _Nature Neuroscience_ ([link](https://www.nature.com/articles/s41593-026-02221-3))
 
 ---
 
