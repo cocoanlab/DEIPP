@@ -394,7 +394,6 @@ if ~exist(func.cf.mni.rbold, 'file') || do_override
         'export CIFTIFY_TEMPLATES=%s/ciftify/data;', ...
         'cifti_vis_fmri snaps --ciftify-work-dir %s --SmoothingFWHM %d --meanfunc %s --verbose %s %s'], ...
         cfgitdir, cfgitdir, cfgitdir, cfdir, func.cf.mni.fwhm, func.mni.boldmean, func.cf.mni.basename, anat.basename));
-    system(sprintf('rm %s.nii.gz', fullfile(cfdir, anat.basename, 'MNINonLinear', 'Results', func.cf.mni.basename, func.cf.mni.basename)));
 end
 
 [~, func.cf.den.basename] = fileparts(strrep(func.den.bold, '.nii.gz', ''));
@@ -417,7 +416,6 @@ if ~exist(func.cf.den.rbold, 'file') || do_override
         'export CIFTIFY_TEMPLATES=%s/ciftify/data;', ...
         'cifti_vis_fmri snaps --ciftify-work-dir %s --SmoothingFWHM %d --meanfunc %s --verbose %s %s'], ...
         cfgitdir, cfgitdir, cfgitdir, cfdir, func.cf.den.fwhm, func.den.boldmean, func.cf.den.basename, anat.basename));
-    system(sprintf('rm %s.nii.gz', fullfile(cfdir, anat.basename, 'MNINonLinear', 'Results', func.cf.den.basename, func.cf.den.basename)));
 end
 
 %% Save metadata and finish
